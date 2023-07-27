@@ -8,6 +8,7 @@ public class OnlineOrderApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(OnlineOrderApplication.class, args);
+        System.out.println("this is a test");
     }
 
 }
