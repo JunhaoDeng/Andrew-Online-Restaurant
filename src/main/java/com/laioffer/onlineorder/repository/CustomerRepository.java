@@ -21,7 +21,13 @@ public interface CustomerRepository extends ListCrudRepository<CustomerEntity, L
 
     CustomerEntity findByEmail(String email);
 
+
     @Modifying
     @Query("UPDATE customers SET first_name = :firstName, last_name = :lastName WHERE id = :id")
     void updateNameById(long id, String firstName, String lastName);
+
+
+    @Modifying
+    @Query("UPDATE customers SET first_name = :firstName, last_name = :lastName WHERE email = :email")
+    void updateNameByEmail(String email, String firstName, String lastName);
 }

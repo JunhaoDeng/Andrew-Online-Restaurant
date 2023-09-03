@@ -9,12 +9,13 @@ import com.laioffer.onlineorder.model.OrderItemDto;
 import com.laioffer.onlineorder.repository.CartRepository;
 import com.laioffer.onlineorder.repository.MenuItemRepository;
 import com.laioffer.onlineorder.repository.OrderItemRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -33,6 +34,7 @@ public class CartService {
     }
 
 
+    @CacheEvict(cacheNames = "cart", key = "#customerId")
     @Transactional
     public void addMenuItemToCart(long customerId, long menuItemId) {
         CartEntity cart = cartRepository.getByCustomerId(customerId);
@@ -55,6 +57,7 @@ public class CartService {
     }
 
 
+    @Cacheable("cart")
     public CartDto getCart(Long customerId) {
         CartEntity cart = cartRepository.getByCustomerId(customerId);
         List<OrderItemEntity> orderItems = orderItemRepository.getAllByCartId(cart.id());
@@ -63,6 +66,7 @@ public class CartService {
     }
 
 
+    @CacheEvict(cacheNames = "cart")
     @Transactional
     public void clearCart(Long customerId) {
         CartEntity cartEntity = cartRepository.getByCustomerId(customerId);
@@ -87,26 +91,9 @@ public class CartService {
             OrderItemDto orderItemDto = new OrderItemDto(orderItem, menuItem);
             orderItemDtos.add(orderItemDto);
         }
-
-
-//        // Stream version:
-//        Set<Long> menuItemIds = orderItems.stream()
-//                .map(OrderItemEntity::menuItemId)
-//                .collect(Collectors.toSet());
-//
-//        List<MenuItemEntity> menuItems = menuItemRepository.findAllById(menuItemIds);
-//
-//        Map<Long, MenuItemEntity> menuItemMap = menuItems.stream()
-//                .collect(Collectors.toMap(MenuItemEntity::id, menuItem -> menuItem));
-//
-//        List<OrderItemDto> orderItemDtos = orderItems.stream()
-//                .map(orderItem -> {
-//                    MenuItemEntity menuItem = menuItemMap.get(orderItem.menuItemId());
-//                    return new OrderItemDto(orderItem, menuItem);
-//                })
-//                .toList();
         return orderItemDtos;
     }
 
 
 }
+

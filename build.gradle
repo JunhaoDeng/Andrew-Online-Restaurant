@@ -21,7 +21,10 @@ repositories {
 
 dependencies {
     implementation 'com.github.javafaker:javafaker:1.0.2'
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.+'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     runtimeOnly 'org.postgresql:postgresql:42.6.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
